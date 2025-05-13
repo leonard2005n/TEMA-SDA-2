@@ -67,6 +67,7 @@ void decode(bst_tree_t *tree, FILE *in, FILE *out)
 
 	// Read the lines to decode
 	for (int i = 0; i < n; i++) {
+
 		fscanf(in, "%s", line);
 
 		int len = strlen(line);
@@ -100,8 +101,43 @@ void decode(bst_tree_t *tree, FILE *in, FILE *out)
 	}
 }
 
+// Recursive functiont to determine the message
+static void r_encode(satelite_t *node, char *name, FILE *out)
+{
+	if (node->left == NULL && node->right == NULL)
+		return;
+	
+
+	if (node->left != NULL) {
+		if (strstr(node->left->name, name) != 0) {
+			fprintf(out, "0");
+			r_encode(node->left, name, out);
+		}
+	}
+
+	if (node->right != NULL) {
+		if (strstr(node->right->name, name) != 0) {
+			fprintf(out, "1");
+			r_encode(node->right, name, out);
+		}
+	}
+}
+
 // Functiont that encode a message
 void encode(bst_tree_t *tree, FILE *in, FILE *out)
 {
-	
+	int n;
+	char name[20];
+
+	fscanf(in, "%d", &n);
+
+	for (int i = 0; i < n; i++) {
+		fscanf(in, "%s", name);
+
+		satelite_t *p = tree->root;
+		r_encode(p, name, out);
+	}
+
+	fprintf(out, "\n");
 }
+

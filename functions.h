@@ -12,3 +12,6 @@ bst_tree_t *create_sateleite_tree(FILE *in);
 
 // Function that decodes the message
 void decode(bst_tree_t *tree, FILE *in, FILE *out);
+
+// Functiont that encode a message
+void encode(bst_tree_t *tree, FILE *in, FILE *out);
