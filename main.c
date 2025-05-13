@@ -21,6 +21,7 @@ int main(int argc, char **argv)
 	if (task == '1') {
 		print_levels(tree, out);
 	} else if (task == '2') {
+		decode(tree, in, out);
 	}
 
 

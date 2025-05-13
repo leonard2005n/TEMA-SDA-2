@@ -51,7 +51,57 @@ bst_tree_t *create_sateleite_tree(FILE *in)
 	memcpy(tree->root, b, tree->data_size);
 	heap_pop(heap);
 
+	// Freeing the heap used
 	heap_free(heap);
 
 	return tree;
+}
+
+// Function that decodes the message
+void decode(bst_tree_t *tree, FILE *in, FILE *out)
+{
+	int n;
+	char line[1001];
+
+	fscanf(in, "%d", &n);
+
+	// Read the lines to decode
+	for (int i = 0; i < n; i++) {
+		fscanf(in, "%s", line);
+
+		int len = strlen(line);
+		satelite_t *p = tree->root;
+
+		int j = 0;
+		// The algorithm for the message
+		while(j < len) {
+				
+			char c = line[j];
+
+			if (c == '0') {
+					if (p->left == NULL) {
+					fprintf(out, "%s ", p->name);
+					p = tree->root;
+				} else {
+					p = p->left;
+					j++;
+				}
+			} else {
+				if (p->right == NULL) {
+					fprintf(out, "%s ", p->name);
+					p = tree->root;
+				} else  {
+					p = p->right;
+					j++;
+				}
+			}
+		}
+		fprintf(out ,"%s\n", p->name);
+	}
+}
+
+// Functiont that encode a message
+void encode(bst_tree_t *tree, FILE *in, FILE *out)
+{
+	
 }
