@@ -14,6 +14,20 @@ print_data(void *data)
     printf("%d %s\n", node->data, node->name);
 }
 
+// Function that puts the parents into the nodes
+void link_parents(satelite_t *node)
+{
+	if (node->left != NULL) {
+		node->left->parent = node;
+		link_parents(node->left);
+	}
+
+	if (node->right != NULL) {
+		node->right->parent = node;
+		link_parents(node->right);
+	}
+}
+
 // Function that reads the satelites form the input and genret a bst tree
 bst_tree_t *create_sateleite_tree(FILE *in) 
 {
@@ -53,6 +67,8 @@ bst_tree_t *create_sateleite_tree(FILE *in)
 
 	// Freeing the heap used
 	heap_free(heap);
+
+	link_parents(tree->root);
 
 	return tree;
 }
@@ -141,3 +157,45 @@ void encode(bst_tree_t *tree, FILE *in, FILE *out)
 	fprintf(out, "\n");
 }
 
+// Finds the common parents of a bunch of satelites
+void common_parent(bst_tree_t *tree, FILE *in, FILE *out)
+{
+	int n;
+	char name[20];
+
+	fscanf(in, "%d %s", &n, name);
+
+	satelite_t *p = tree->root;
+
+	while (strcmp(p->name, name) != 0) {
+		if (p->left != NULL) {
+			if (strstr(p->left->name, name) != 0) {
+					p = p->left;
+				}
+		}
+
+		if (p->right != NULL) {
+			if (strstr(p->right->name, name) != 0) {
+				p = p->right;
+			}
+		}
+	}
+
+	// Finding the comun parent
+	for (int i = 1; i < n; i++) {
+		 
+		fscanf(in, "%s", name);
+
+		while (1) {
+			if (p->parent == NULL)
+				break;
+
+			if (strstr(p->name, name) != 0)
+				break;
+			
+			p = p->parent;
+		}
+	}
+
+	fprintf(out, "%s\n", p->name);
+}

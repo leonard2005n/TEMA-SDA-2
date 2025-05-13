@@ -15,3 +15,6 @@ void decode(bst_tree_t *tree, FILE *in, FILE *out);
 
 // Functiont that encode a message
 void encode(bst_tree_t *tree, FILE *in, FILE *out);
+
+// Finds the common parents of a bunch of satelites
+void common_parent(bst_tree_t *tree, FILE *in, FILE *out);

@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 {
 
 	FILE *in, *out;
-	char task =  argv[1][2], s[30];
+	char task =  argv[1][2];
 
 	// Opens the files
 	in = fopen(argv[argc - 2], "rt");
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	} else if (task == '3') {
 		encode(tree, in, out);
 	} else if (task == '4') {
-		
+		common_parent(tree, in, out);
 	}
 
 
