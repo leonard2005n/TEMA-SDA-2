@@ -6,7 +6,7 @@
 typedef struct satelite_t satelite_t;
 struct satelite_t {
 	int data;
-	char name[15];
+	char name[300];
 	satelite_t *left, *right, *parent;
 };
 

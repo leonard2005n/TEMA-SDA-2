@@ -28,8 +28,8 @@ int q_get_size(queue_t *q)
 int q_is_empty(queue_t *q)
 {
 	if (q->size == 0)
-	return 1;
-	
+		return 1;
+
 	return 0;
 }
 
@@ -37,7 +37,7 @@ int q_is_empty(queue_t *q)
 void *q_fornt(queue_t *q)
 {
 	if (q->size == 0)
-	return NULL;
+		return NULL;
 
 	return q->buff[q->read_idx % q->max_size];
 }
@@ -64,7 +64,6 @@ int q_enqueue(queue_t *q, void *new_data)
 	q->write_idx++;
 	return 1;
 }
-
 
 // Function that clears the queue
 void q_clear(queue_t *q)

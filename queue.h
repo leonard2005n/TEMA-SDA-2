@@ -1,13 +1,13 @@
 #pragma once
 
 typedef struct {
- 	int max_size;
- 	int size;
+	int max_size;
+	int size;
 	int data_size;
 	int read_idx;
 	int write_idx;
 	void **buff;
-}queue_t;
+} queue_t;
 
 // Function that creates a queue
 queue_t *q_create(int data_size, int max_size);

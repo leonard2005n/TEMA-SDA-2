@@ -22,7 +22,6 @@ typedef struct {
 	int (*cmp)(void *key1, void *key2);
 } heap_t;
 
-
 // Function that creates an heap
 heap_t *heap_create(int (*cmp)(void *, void *), int data_size);
 

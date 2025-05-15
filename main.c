@@ -28,7 +28,6 @@ int main(int argc, char **argv)
 		common_parent(tree, in, out);
 	}
 
-
 	// Closes the opened files
 	bst_tree_free(tree);
 	fclose(in);

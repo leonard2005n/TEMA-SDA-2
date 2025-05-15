@@ -5,10 +5,10 @@
 #include "heap.h"
 
 // Function that creates an heap
-heap_t *heap_create(int (*cmp)(void *, void *), int data_size) 
+heap_t *heap_create(int (*cmp)(void *, void *), int data_size)
 {
 
-	heap_t *heap = (heap_t*)malloc(sizeof(heap_t));
+	heap_t *heap = (heap_t *)malloc(sizeof(heap_t));
 
 	heap->arr = malloc(5 * data_size);
 	heap->capacity = 5;
@@ -20,7 +20,7 @@ heap_t *heap_create(int (*cmp)(void *, void *), int data_size)
 }
 
 // Function that fixex the inserrion of the heap
-void push_up(heap_t *heap, int pos) 
+void push_up(heap_t *heap, int pos)
 {
 	char *arr = heap->arr;
 	int p = GO_UP(pos);
@@ -29,19 +29,19 @@ void push_up(heap_t *heap, int pos)
 		return;
 
 	if (heap->cmp(&arr[p * heap->data_size], &arr[pos * heap->data_size]) > 0) {
-	
+
 		// Switches the value with the parent
 		void *aux = malloc(heap->data_size);
 		memcpy(aux, &arr[p * heap->data_size], heap->data_size);
-		memcpy(&arr[p * heap->data_size], &arr[pos * heap->data_size], heap->data_size);
+		memcpy(&arr[p * heap->data_size],
+			   &arr[pos * heap->data_size], heap->data_size);
 		memcpy(&arr[pos * heap->data_size], aux, heap->data_size);
 		free(aux);
 
-		push_up(heap, p); 	
+		push_up(heap, p);
 	}
 
 }
-
 
 // Function that iserts a value into the heap
 void heap_insert(heap_t *heap, void *data)
@@ -49,7 +49,17 @@ void heap_insert(heap_t *heap, void *data)
 	char *arr = heap->arr;
 
 	memcpy(&arr[heap->size * heap->data_size], data, heap->data_size);
-	push_up(heap, heap->size);
+
+	for (int i = heap->size; i > 0; i--) {
+		if (heap->cmp(&arr[i * heap->data_size], &arr[(i - 1) * heap->data_size]) < 0) {
+			void *aux = malloc(heap->data_size);
+			memcpy(aux, &arr[i * heap->data_size], heap->data_size);
+			memcpy(&arr[i * heap->data_size],
+				&arr[(i - 1) * heap->data_size], heap->data_size);
+			memcpy(&arr[(i - 1) * heap->data_size], aux, heap->data_size);
+			free(aux);
+		}
+	}
 
 	heap->size++;
 
@@ -57,13 +67,12 @@ void heap_insert(heap_t *heap, void *data)
 
 		heap->capacity *= 2;
 		heap->arr = realloc(heap->arr, heap->capacity * heap->data_size);
-		
+
 	}
 }
 
-
 // Function that perfoms the push down
-void push_down(heap_t *heap, int pos) 
+void push_down(heap_t *heap, int pos)
 {
 	char *arr = heap->arr;
 	int p = pos;
@@ -71,14 +80,14 @@ void push_down(heap_t *heap, int pos)
 	int l = GO_LEFT(pos); // left son
 	int min = p; // minimu
 
-
 	// compares with the left child
-	if (p == heap->size)
+	if (pos >= heap->size)
 		return;
 
 	if (l < heap->size) {
 
-		if (heap->cmp(&arr[min * heap->data_size], &arr[l * heap->data_size]) > 0)
+		if (heap->cmp(&arr[min * heap->data_size],
+					  &arr[l * heap->data_size]) > 0)
 			min = l;
 
 	}
@@ -86,7 +95,8 @@ void push_down(heap_t *heap, int pos)
 	// compares with the right child
 	if (r < heap->size) {
 
-		if (heap->cmp(&arr[min * heap->data_size], &arr[r * heap->data_size]) > 0)
+		if (heap->cmp(&arr[min * heap->data_size],
+					  &arr[r * heap->data_size]) > 0)
 			min = r;
 
 	}
@@ -95,7 +105,8 @@ void push_down(heap_t *heap, int pos)
 	if (min != p) {
 		void *aux = malloc(heap->data_size);
 		memcpy(aux, &arr[p * heap->data_size], heap->data_size);
-		memcpy(&arr[p * heap->data_size], &arr[min * heap->data_size], heap->data_size);
+		memcpy(&arr[p * heap->data_size],
+			   &arr[min * heap->data_size], heap->data_size);
 		memcpy(&arr[min * heap->data_size], aux, heap->data_size);
 		free(aux);
 		push_down(heap, min);
@@ -104,7 +115,7 @@ void push_down(heap_t *heap, int pos)
 }
 
 // Function that removes the first elemnt of the heap
-void heap_pop(heap_t *heap) 
+void heap_pop(heap_t *heap)
 {
 	char *arr = heap->arr;
 

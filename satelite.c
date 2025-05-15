@@ -12,10 +12,10 @@ int satelite_cmp(void *k1, void *k2)
 
 	if (a->data > b->data) {
 		return 1;
-	} else if (a->data <= b->data) {
+	} else if (a->data < b->data) {
 		return -1;
 	} else {
-		return strcmp(b->name, a->name);
+		return strcmp(a->name, b->name);
 	}
 }
 
@@ -30,10 +30,18 @@ heap_t *read_satelites(FILE *in)
 	for (int i = 0; i < n; i++) {
 		satelite_t aux;
 		fscanf(in, "%d %s", &aux.data, aux.name);
+		// printf("%d %s\n", aux.data, aux.name);
 		aux.left = NULL;
 		aux.right = NULL;
 		aux.parent = NULL;
 		heap_insert(heap, &aux);
+
+		// for (int  j = 0; j < heap->size; j++) {
+		// 	satelite_t *p = heap->arr + (j) * heap->data_size;
+		// 	printf("%d %s ", p->data, p->name);
+		// }
+		// printf("\n");
+
 	}
 	return heap;
 }
