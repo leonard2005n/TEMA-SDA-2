@@ -10,16 +10,16 @@ typedef struct {
 	int data_size; // data_size
 	int (*cmp)(void *key1, void *key2);
 
-} bst_tree_t;
+} b_tree_t;
 
 // Function that creates a BST tree
-bst_tree_t *bst_create(int data_size, int (*cmp)(void *, void *));
+b_tree_t *b_create(int data_size, int (*cmp)(void *, void *));
 
 // Function that deletes the enitre tree recursive
-void bst_free(satelite_t *bst_node);
+void b_free(satelite_t *bst_node);
 
 // Function that deletes the tree
-void bst_tree_free(bst_tree_t *bst_tree);
+void b_tree_free(b_tree_t *bst_tree);
 
 // Function that makes the BFS algorithm
-void print_levels(bst_tree_t *tree, FILE *out);
+void print_levels(b_tree_t *tree, FILE *out);

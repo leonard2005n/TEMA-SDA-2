@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//
+// The struct for the heap
 typedef struct {
 	void *arr;
 	int size;

@@ -22,29 +22,35 @@ void link_parents(satelite_t *node)
 }
 
 // Function that reads the satelites form the input and genret a bst tree
-bst_tree_t *create_sateleite_tree(FILE *in)
+b_tree_t *create_sateleite_tree(FILE *in)
 {
 	heap_t *heap = read_satelites(in);
 
 	while (heap->size > 1) {
+
 		satelite_t aux, *a, *b;
+
 		a = heap->arr; // first satelite
 
 		satelite_t *left = malloc(sizeof(satelite_t));
 		satelite_t *right = malloc(sizeof(satelite_t));
 
+		if (!left || !right) {
+			printf("ERROR CREATE SATELITE\n");
+			exit(1);
+		}
+
 		// Copy the memory into the left node
 		memcpy(left, a, sizeof(satelite_t));
-
 		heap_pop(heap);
 
 		b = heap->arr; // second satelite
 
 		// Copy the memory into the right node
 		memcpy(right, b, sizeof(satelite_t));
+		heap_pop(heap);
 
 		// Making the new satelite
-		heap_pop(heap);
 		aux.data = left->data + right->data;
 		aux.name = calloc(1, strlen(left->name) + strlen(right->name) + 1);
 		strcpy(aux.name, left->name);
@@ -53,13 +59,20 @@ bst_tree_t *create_sateleite_tree(FILE *in)
 		aux.right = right;
 
 		heap_insert(heap, &aux);
+
 	}
 
 	// Creates the tree
-	satelite_t *b = heap_top(heap);	
-	bst_tree_t *tree = bst_create(sizeof(satelite_t), satelite_cmp);
+	satelite_t *b = heap_top(heap);
+	b_tree_t *tree = b_create(sizeof(satelite_t), satelite_cmp);
 
 	tree->root = malloc(sizeof(satelite_t));
+
+	if (!tree->root) {
+		printf("ERROR ROOT\n");
+		exit(1);
+	}
+
 	memcpy(tree->root, b, tree->data_size);
 	heap_pop(heap);
 
@@ -73,7 +86,7 @@ bst_tree_t *create_sateleite_tree(FILE *in)
 }
 
 // Function that decodes the message
-void decode(bst_tree_t *tree, FILE *in, FILE *out)
+void decode(b_tree_t *tree, FILE *in, FILE *out)
 {
 	int n;
 	char line[1001];
@@ -131,6 +144,7 @@ static void r_encode(satelite_t *node, char *name, FILE *out)
 	if (node->left && !ok) {
 		char *p = strstr(node->left->name, name);
 		if (p != 0) {
+
 			// Is a case if the node name is K1 and you need to find K1
 			// it can match with K11
 			while (strlen(name) == 2 &&
@@ -140,6 +154,7 @@ static void r_encode(satelite_t *node, char *name, FILE *out)
 				if (p == 0)
 					break;
 			}
+
 			if (p != 0) {
 				fprintf(out, "0");
 				r_encode(node->left, name, out);
@@ -152,6 +167,7 @@ static void r_encode(satelite_t *node, char *name, FILE *out)
 	if (node->right && !ok) {
 		char *p = strstr(node->right->name, name);
 		if (p != 0) {
+
 			// Is a case if the node name is K1 and you need to find K1
 			// it can match with K11
 			while (strlen(name) == 2 &&
@@ -160,6 +176,7 @@ static void r_encode(satelite_t *node, char *name, FILE *out)
 				if (p == 0)
 					break;
 			}
+
 			if (p != 0) {
 				fprintf(out, "1");
 				r_encode(node->right, name, out);
@@ -170,7 +187,7 @@ static void r_encode(satelite_t *node, char *name, FILE *out)
 }
 
 // Functiont that encode a message
-void encode(bst_tree_t *tree, FILE *in, FILE *out)
+void encode(b_tree_t *tree, FILE *in, FILE *out)
 {
 	int n;
 	char name[20];
@@ -188,14 +205,13 @@ void encode(bst_tree_t *tree, FILE *in, FILE *out)
 }
 
 // Finds the common parents of a bunch of satelites
-void common_parent(bst_tree_t *tree, FILE *in, FILE *out)
+void common_parent(b_tree_t *tree, FILE *in, FILE *out)
 {
 	int n;
 	char name[20];
+	satelite_t *p = tree->root;
 
 	fscanf(in, "%d %s", &n, name);
-
-	satelite_t *p = tree->root;
 
 	// Finding the first parent of the first node
 	while (strcmp(p->name, name) != 0) {

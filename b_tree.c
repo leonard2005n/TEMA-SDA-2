@@ -6,11 +6,11 @@
 #include "queue.h"
 
 // Function that creates a BST tree
-bst_tree_t *bst_create(int data_size, int (*cmp)(void *, void *))
+b_tree_t *b_create(int data_size, int (*cmp)(void *, void *))
 {
-	bst_tree_t *tree;
+	b_tree_t *tree;
 
-	tree = malloc(sizeof(bst_tree_t));
+	tree = malloc(sizeof(b_tree_t));
 
 	tree->root = NULL;
 	tree->data_size = data_size;
@@ -20,26 +20,26 @@ bst_tree_t *bst_create(int data_size, int (*cmp)(void *, void *))
 }
 
 // Function that deletes the enitre tree recursive
-void bst_free(satelite_t *bst_node)
+void b_free(satelite_t *bst_node)
 {
 	if (!bst_node)
 		return;
 
-	bst_free(bst_node->left);
-	bst_free(bst_node->right);
+	b_free(bst_node->left);
+	b_free(bst_node->right);
 	free(bst_node->name);
 	free(bst_node);
 }
 
 // Function that deletes the tree
-void bst_tree_free(bst_tree_t *bst_tree)
+void b_tree_free(b_tree_t *bst_tree)
 {
-	bst_free(bst_tree->root);
+	b_free(bst_tree->root);
 	free(bst_tree);
 }
 
 // Function that makes the BFS algorithm
-void print_levels(bst_tree_t *tree, FILE *out)
+void print_levels(b_tree_t *tree, FILE *out)
 {
 	// Check if the tree is empty
 	if (!tree->root)

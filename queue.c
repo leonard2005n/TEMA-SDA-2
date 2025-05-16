@@ -8,9 +8,19 @@ queue_t *q_create(int data_size, int max_size)
 {
 	queue_t *queue = calloc(1, sizeof(queue_t));
 
+	if (!queue) {
+		printf("ERROR QUEUE\n");
+		exit(1);
+	}
+
 	queue->max_size = max_size;
 	queue->data_size = data_size;
 	queue->buff = calloc(max_size, sizeof(void *));
+
+	if (!queue->buff) {
+		printf("ERROR QUEUE\n");
+		exit(1);
+	}
 
 	for (int i = 0; i < max_size; i++)
 		queue->buff[i] = calloc(1, data_size);

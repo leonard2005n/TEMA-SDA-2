@@ -14,8 +14,22 @@ int main(int argc, char **argv)
 
 	// Opens the files
 	in = fopen(argv[argc - 2], "rt");
+
+	// Check if the file has open
+	if (!in) {
+		printf("ERROR OPEN FILE\n");
+		exit(1);
+	}
+
 	out = fopen(argv[argc - 1], "wt");
-	bst_tree_t *tree = create_sateleite_tree(in);
+
+	// Check if the file has open
+	if (!out) {
+		printf("ERROR OPEN FILE\n");
+		exit(1);
+	}
+
+	b_tree_t *tree = create_sateleite_tree(in);
 
 	// Choose the task
 	if (task == '1') {
@@ -29,7 +43,7 @@ int main(int argc, char **argv)
 	}
 
 	// Closes the opened files
-	bst_tree_free(tree);
+	b_tree_free(tree);
 	fclose(in);
 	fclose(out);
 	return 0;

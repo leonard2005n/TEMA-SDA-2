@@ -29,6 +29,12 @@ heap_t *read_satelites(FILE *in)
 	for (int i = 0; i < n; i++) {
 		satelite_t aux;
 		aux.name = calloc(1, 15);
+
+		if (!aux.name) {
+			printf("ERROR AUX");
+			exit(1);
+		}
+
 		fscanf(in, "%d %s", &aux.data, aux.name);
 		aux.left = NULL;
 		aux.right = NULL;

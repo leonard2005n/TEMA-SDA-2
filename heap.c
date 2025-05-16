@@ -4,13 +4,13 @@
 #include <string.h>
 #include "heap.h"
 
-/* Get the index of the parent */
+// Get the index of the parent
 #define GO_UP(x) (((x) - 1) >> 1)
 
-/* Get the index of the left child */
+// Get the index of the left child
 #define GO_LEFT(x) (((x) << 1) + 1)
 
-/* Get the index of the right child */
+// Get the index of the right child
 #define GO_RIGHT(x) (((x) << 1) + 2)
 
 // Function that creates an heap
@@ -19,7 +19,20 @@ heap_t *heap_create(int (*cmp)(void *, void *), int data_size)
 
 	heap_t *heap = (heap_t *)malloc(sizeof(heap_t));
 
+	// Check if the heap has memory
+	if (!heap) {
+		printf("ERROR CREATEING HEAP\n");
+		exit(1);
+	}
+
+	// Copy the data to the heap
 	heap->arr = malloc(5 * data_size);
+
+	if (!heap->arr) {
+		printf("ERROR CREATEING HEAP\n");
+		exit(1);
+	}
+
 	heap->capacity = 5;
 	heap->data_size = data_size;
 	heap->size = 0;
@@ -41,6 +54,12 @@ void push_up(heap_t *heap, int pos)
 
 		// Switches the value with the parent
 		void *aux = malloc(heap->data_size);
+
+		if (!aux) {
+			printf("ERROR AUXILIAR VARIABLE\n");
+			exit(1);
+		}
+
 		memcpy(aux, &arr[p * heap->data_size], heap->data_size);
 		memcpy(&arr[p * heap->data_size],
 			   &arr[pos * heap->data_size], heap->data_size);
@@ -103,12 +122,19 @@ void push_down(heap_t *heap, int pos)
 	// Moves the values
 	if (min != p) {
 		void *aux = malloc(heap->data_size);
+
+		if (!aux) {
+			printf("ERROR AUXILIAR VARIABLE\n");
+			exit(1);
+		}
+
 		memcpy(aux, &arr[p * heap->data_size], heap->data_size);
 		memcpy(&arr[p * heap->data_size],
 			   &arr[min * heap->data_size], heap->data_size);
 		memcpy(&arr[min * heap->data_size], aux, heap->data_size);
 		free(aux);
 		push_down(heap, min);
+
 	}
 
 }
@@ -116,12 +142,14 @@ void push_down(heap_t *heap, int pos)
 // Function that removes the first elemnt of the heap
 void heap_pop(heap_t *heap)
 {
+
 	char *arr = heap->arr;
 
 	memcpy(&arr[0], &arr[(heap->size - 1) * heap->data_size], heap->data_size);
 	heap->size--;
 
 	push_down(heap, 0);
+
 }
 
 // Returns the value at the top of the heap
