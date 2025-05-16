@@ -4,6 +4,15 @@
 #include <string.h>
 #include "heap.h"
 
+/* Get the index of the parent */
+#define GO_UP(x) (((x) - 1) >> 1)
+
+/* Get the index of the left child */
+#define GO_LEFT(x) (((x) << 1) + 1)
+
+/* Get the index of the right child */
+#define GO_RIGHT(x) (((x) << 1) + 2)
+
 // Function that creates an heap
 heap_t *heap_create(int (*cmp)(void *, void *), int data_size)
 {
@@ -28,7 +37,7 @@ void push_up(heap_t *heap, int pos)
 	if (pos == 0)
 		return;
 
-	if (heap->cmp(&arr[p * heap->data_size], &arr[pos * heap->data_size]) > 0) {
+	if (heap->cmp(&arr[pos * heap->data_size], &arr[p * heap->data_size]) < 0) {
 
 		// Switches the value with the parent
 		void *aux = malloc(heap->data_size);
@@ -49,17 +58,7 @@ void heap_insert(heap_t *heap, void *data)
 	char *arr = heap->arr;
 
 	memcpy(&arr[heap->size * heap->data_size], data, heap->data_size);
-
-	for (int i = heap->size; i > 0; i--) {
-		if (heap->cmp(&arr[i * heap->data_size], &arr[(i - 1) * heap->data_size]) < 0) {
-			void *aux = malloc(heap->data_size);
-			memcpy(aux, &arr[i * heap->data_size], heap->data_size);
-			memcpy(&arr[i * heap->data_size],
-				&arr[(i - 1) * heap->data_size], heap->data_size);
-			memcpy(&arr[(i - 1) * heap->data_size], aux, heap->data_size);
-			free(aux);
-		}
-	}
+	push_up(heap, heap->size);
 
 	heap->size++;
 

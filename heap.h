@@ -4,15 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Get the index of the parent
-#define GO_UP(x) (((x) - 1) >> 1)
-
-// Get the index of the left child
-#define GO_LEFT(x) (((x) << 1) + 1)
-
-// Get the index of the right child
-#define GO_RIGHT(x) (((x) << 1) + 2)
-
 //
 typedef struct {
 	void *arr;

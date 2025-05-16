@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "tasks.h"
 #include "heap.h"
 #include "satelite.h"
 
@@ -29,18 +28,12 @@ heap_t *read_satelites(FILE *in)
 
 	for (int i = 0; i < n; i++) {
 		satelite_t aux;
+		aux.name = calloc(1, 15);
 		fscanf(in, "%d %s", &aux.data, aux.name);
-		// printf("%d %s\n", aux.data, aux.name);
 		aux.left = NULL;
 		aux.right = NULL;
 		aux.parent = NULL;
 		heap_insert(heap, &aux);
-
-		// for (int  j = 0; j < heap->size; j++) {
-		// 	satelite_t *p = heap->arr + (j) * heap->data_size;
-		// 	printf("%d %s ", p->data, p->name);
-		// }
-		// printf("\n");
 
 	}
 	return heap;

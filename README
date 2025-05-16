@@ -1,3 +1,7 @@
+LOCAL CHECKER
+Scor total: 95.00 puncte din 115.
+(Teste rulate: 84)
+
 The implementetion is based on two data structures a min_heap to generete
 the binarry tree like is written in the homework. The tree is consturcted
 at the same as the new satelites are created.

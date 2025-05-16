@@ -1,19 +1,20 @@
 #include <string.h>
 #include <stdio.h>
-#include "tasks.h"
 #include "heap.h"
 #include "satelite.h"
-#include "BST.h"
+#include "b_tree.h"
 #include "functions.h"
 
 // Function that puts the parents into the nodes
 void link_parents(satelite_t *node)
 {
+	// Link with the left node
 	if (node->left) {
 		node->left->parent = node;
 		link_parents(node->left);
 	}
 
+	// Link with the right node
 	if (node->right) {
 		node->right->parent = node;
 		link_parents(node->right);
@@ -28,30 +29,34 @@ bst_tree_t *create_sateleite_tree(FILE *in)
 	while (heap->size > 1) {
 		satelite_t aux, *a, *b;
 		a = heap->arr; // first satelite
-		b = heap->arr + heap->data_size; // second satelite
 
 		satelite_t *left = malloc(sizeof(satelite_t));
 		satelite_t *right = malloc(sizeof(satelite_t));
 
+		// Copy the memory into the left node
 		memcpy(left, a, sizeof(satelite_t));
+
+		heap_pop(heap);
+
+		b = heap->arr; // second satelite
+
+		// Copy the memory into the right node
 		memcpy(right, b, sizeof(satelite_t));
-		// printf("%d %s, %d %s\n", a->data, a->name, b->data, b->name);
 
 		// Making the new satelite
-		aux.data = a->data + b->data;
-		strcpy(aux.name, a->name);
-		strcat(aux.name, b->name);
+		heap_pop(heap);
+		aux.data = left->data + right->data;
+		aux.name = calloc(1, strlen(left->name) + strlen(right->name) + 1);
+		strcpy(aux.name, left->name);
+		strcat(aux.name, right->name);
 		aux.left = left;
 		aux.right = right;
-
-		heap_pop(heap);
-		heap_pop(heap);
 
 		heap_insert(heap, &aux);
 	}
 
 	// Creates the tree
-	satelite_t *b = heap_top(heap);
+	satelite_t *b = heap_top(heap);	
 	bst_tree_t *tree = bst_create(sizeof(satelite_t), satelite_cmp);
 
 	tree->root = malloc(sizeof(satelite_t));
@@ -107,27 +112,59 @@ void decode(bst_tree_t *tree, FILE *in, FILE *out)
 				}
 			}
 		}
-		fprintf(out, "%s\n", p->name);
+		if (!p->left && !p->right)
+			fprintf(out, "%s", p->name);
+		fprintf(out, "\n");
 	}
 }
 
 // Recursive functiont to determine the message
 static void r_encode(satelite_t *node, char *name, FILE *out)
 {
+	int ok = 0;
+
+	// Breaking function
 	if (!node->left && !node->right)
 		return;
 
-	if (node->left) {
-		if (strstr(node->left->name, name) != 0) {
-			fprintf(out, "0");
-			r_encode(node->left, name, out);
+	// If the node is on the left
+	if (node->left && !ok) {
+		char *p = strstr(node->left->name, name);
+		if (p != 0) {
+			// Is a case if the node name is K1 and you need to find K1
+			// it can match with K11
+			while (strlen(name) == 2 &&
+				   strchr("0123456789", p[2]) != 0 && p[2] != 0) {
+				p = strstr(p + 1, name);
+
+				if (p == 0)
+					break;
+			}
+			if (p != 0) {
+				fprintf(out, "0");
+				r_encode(node->left, name, out);
+				ok = 1;
+			}
 		}
 	}
 
-	if (node->right) {
-		if (strstr(node->right->name, name) != 0) {
-			fprintf(out, "1");
-			r_encode(node->right, name, out);
+	// If the node is on the right
+	if (node->right && !ok) {
+		char *p = strstr(node->right->name, name);
+		if (p != 0) {
+			// Is a case if the node name is K1 and you need to find K1
+			// it can match with K11
+			while (strlen(name) == 2 &&
+				   strchr("0123456789", p[2]) != 0 && p[2] != 0) {
+				p = strstr(p + 1, name);
+				if (p == 0)
+					break;
+			}
+			if (p != 0) {
+				fprintf(out, "1");
+				r_encode(node->right, name, out);
+				ok = 1;
+			}
 		}
 	}
 }
@@ -160,6 +197,7 @@ void common_parent(bst_tree_t *tree, FILE *in, FILE *out)
 
 	satelite_t *p = tree->root;
 
+	// Finding the first parent of the first node
 	while (strcmp(p->name, name) != 0) {
 		if (p->left) {
 			if (strstr(p->left->name, name) != 0) {

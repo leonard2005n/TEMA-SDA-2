@@ -1,6 +1,6 @@
 CC = gcc
 FLAGS = -Wall -Wextra -g
-TARGETS = main.c functions.c satelite.c heap.c BST.c queue.c
+TARGETS = main.c functions.c satelite.c heap.c b_tree.c queue.c
 NAME = tema2
 
 build: $(TARGETS)
